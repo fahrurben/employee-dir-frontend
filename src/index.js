@@ -3,10 +3,21 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import { Provider } from 'react-redux';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import configureStore from './configureStore';
+
+const store = configureStore();
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+      <Provider store={store}>
+          <Router>
+              <div className="container mx-auto">
+                  <Route exact path="/" component={App} />
+              </div>
+          </Router>
+      </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
