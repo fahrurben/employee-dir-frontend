@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import Login from './pages/Login';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
@@ -14,7 +14,7 @@ ReactDOM.render(
       <Provider store={store}>
           <Router>
               <div className="container mx-auto">
-                  <Route exact path="/" component={App} />
+                  <Route exact path="/" component={Login} />
               </div>
           </Router>
       </Provider>

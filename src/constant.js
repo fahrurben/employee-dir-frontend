@@ -1,0 +1,5 @@
+export const AUTH_TOKEN_KEY = 'AUTH_TOKEN_KEY';
+
+export const LOGIN_SUBMITTING = 'LOGIN_SUBMITTING';
+export const LOGIN_SUBMITTED = 'LOGIN_SUBMITTED';
+export const LOGIN_RESET = 'LOGIN_RESET';
