@@ -16,6 +16,12 @@ import {
     CREATE_EMPLOYEE_SUBMITTING,
     CREATE_EMPLOYEE_SUCCEEDED,
     CREATE_EMPLOYEE_FAILED,
+    GET_EMPLOYEE,
+    GET_EMPLOYEE_SUCCEEDED,
+    UPDATE_EMPLOYEE,
+    UPDATE_EMPLOYEE_SUBMITTING,
+    UPDATE_EMPLOYEE_SUCCEEDED,
+    UPDATE_EMPLOYEE_FAILED,
 } from './constant';
 
 const apiUrl = process.env.REACT_APP_API_URL;
@@ -78,6 +84,23 @@ function* getEmployees(action) {
     }
 }
 
+function* getEmployee(action) {
+    const headerConfig = {
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem(AUTH_TOKEN_KEY)
+        }
+    };
+
+    let response = null;
+    try {
+        response = yield axios.get(apiUrl + '/employees/' + action.payload, headerConfig);
+        yield put({
+            type: GET_EMPLOYEE_SUCCEEDED,
+            payload: { data: response.data?.data }
+        });
+    } catch (e) {}
+}
+
 function* createEmployee(action) {
     let response, responseCreate = null;
 
@@ -101,6 +124,29 @@ function* createEmployee(action) {
     }
 }
 
+function* updateEmployee(action) {
+    let response, responseCreate = null;
+
+    const headerConfig = {
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem(AUTH_TOKEN_KEY)
+        }
+    };
+
+    try {
+        yield put({type: UPDATE_EMPLOYEE_SUBMITTING});
+
+        responseCreate = yield axios.post(apiUrl + '/employees/' + action.payload.id , qs.stringify(action.payload), headerConfig);
+        response = yield axios.get(apiUrl + '/employees', headerConfig);
+
+        yield put({type: UPDATE_EMPLOYEE_SUCCEEDED, payload: {isSuccess: true, data: responseCreate.data?.data}});
+        yield put({type: FETCH_EMPLOYEES_SUCCEEDED, payload: {isSuccess: true, data: response.data?.data}});
+    } catch (e) {
+        const errorMessage = e?.response?.data?.message;
+        yield put({type: UPDATE_EMPLOYEE_FAILED, payload: {isSuccess: false, message: errorMessage}});
+    }
+}
+
 // notice how we now only export the rootSaga
 // single entry point to start all Sagas at once
 export default function* rootSaga() {
@@ -109,5 +155,7 @@ export default function* rootSaga() {
         yield takeLatest(FETCH_DEPARTMENTS, getDepartments),
         yield takeLatest(FETCH_EMPLOYEES, getEmployees),
         yield takeLatest(CREATE_EMPLOYEE, createEmployee),
+        yield takeLatest(GET_EMPLOYEE, getEmployee),
+        yield takeLatest(UPDATE_EMPLOYEE, updateEmployee),
     ])
 }

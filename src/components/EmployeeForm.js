@@ -1,40 +1,59 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Button, Classes, FormGroup, Intent} from "@blueprintjs/core";
 import {Controller, useForm} from "react-hook-form";
 import {DateInput} from "@blueprintjs/datetime";
 import moment from "moment";
+import {useSelector} from "react-redux";
 
 function EmployeeForm(props) {
-    const {control, register, handleSubmit, errors} = useForm();
+    const {control, register, handleSubmit, errors, setValue} = useForm();
     let departments = props.departments;
+    let employee = useSelector(state => state.employee.employee);
+
+    useEffect(() => {
+        console.log(employee);
+        setValue("id", employee.id);
+        setValue("employee_id", employee.employee_id);
+        setValue("firstname", employee.firstname);
+        setValue("lastname", employee.lastname);
+        setValue("fullname", employee.fullname);
+        setValue("birthday", moment(employee.birthday).toDate());
+        setValue("position", employee.position);
+        setValue("department", employee.department);
+        setValue("address", employee.address);
+        setValue("phone", employee.phone);
+        setValue("mobile", employee.mobile);
+        setValue("email", employee.email);
+    }, [employee]);
 
     return (
         <form onSubmit={handleSubmit(props.onFormSubmit)}>
             <div className={Classes.DIALOG_BODY}>
+                <input type="hidden" id="id" name="id" ref={register} />
                 <FormGroup label="Employee ID" labelFor="employee_id" inline={true} className="form-row" labelInfo="*"
                            helperText={errors.employee_id && 'Employee ID is required'}
                            intent={errors.employee_id && Intent.DANGER}
                 >
                     <input className="bp3-input" id="employee_id" name="employee_id" ref={register({required: true})}
-                           placeholder="Employee ID"/>
+                           defaultValue={employee?.employee_id} placeholder="Employee ID"/>
                 </FormGroup>
                 <FormGroup label="Firstname" labelFor="firstname" inline={true} className="form-row" labelInfo="*"
                            helperText={errors.firstname && 'Firstname is required'}
                            intent={errors.firstname && Intent.DANGER}>
                     <input className="bp3-input" id="firstname" name="firstname" ref={register({required: true})}
-                           placeholder="Firstname"/>
+                           defaultValue={employee?.firstname} placeholder="Firstname"/>
                 </FormGroup>
                 <FormGroup label="Lastname" labelFor="lastname" inline={true} className="form-row" labelInfo="*"
                            helperText={errors.lastname && 'Lastname is required'}
                            intent={errors.lastname && Intent.DANGER}>
                     <input className="bp3-input" id="lastname" name="lastname" ref={register({required: true})}
-                           placeholder="Lastname"/>
+                           defaultValue={employee?.lastname} placeholder="Lastname"/>
                 </FormGroup>
                 <FormGroup label="Fullname" labelFor="fullname" inline={true} className="form-row" labelInfo="*"
                            helperText={errors.fullname && 'Fullname is required'}
                            intent={errors.fullname && Intent.DANGER}>
                     <input className="bp3-input" id="fullname" name="fullname" ref={register({required: true})}
-                           placeholder="Fullname"/>
+                           defaultValue={employee?.fullname} placeholder="Fullname"/>
                 </FormGroup>
                 <FormGroup label="Birthday" labelFor="birthday" inline={true} className="form-row" labelInfo="*"
                            helperText={errors.birthday && 'Birthday is required'}
@@ -45,14 +64,14 @@ function EmployeeForm(props) {
                         control={control}
                         formatDate={date => moment(date).format('DD-MM-YYYY')}
                         parseDate={str => new Date(str)}
-                        defaultValue={new Date()}
+                        defaultValue={employee?.birthday}
                     />
                 </FormGroup>
                 <FormGroup label="Position" labelFor="position" inline={true} className="form-row" labelInfo="*"
                            helperText={errors.position && 'Position is required'}
                            intent={errors.position && Intent.DANGER}>
                     <input className="bp3-input" id="position" name="position" ref={register({required: true})}
-                           placeholder="Position"/>
+                           defaultValue={employee?.position} placeholder="Position"/>
                 </FormGroup>
                 <FormGroup label="Department" labelFor="department_id" inline={true} className="form-row" labelInfo="*"
                            helperText={errors.department_id && 'Department is required'}
@@ -64,23 +83,28 @@ function EmployeeForm(props) {
                                 departments &&
                                 departments.length > 0 &&
                                 departments.map((department) => {
-                                    return (<option value={department.id}>{department.name}</option>)
+                                    const selected = department.id === employee.department_id ? 'selected' : '';
+                                    return (<option value={department.id} selected={selected}>{department.name}</option>)
                                 })
                             }
                         </select>
                     </div>
                 </FormGroup>
                 <FormGroup label="Address" labelFor="address" inline={true} className="form-row" labelInfo="">
-                    <input className="bp3-input" id="address" name="address" ref={register} placeholder="Address"/>
+                    <input className="bp3-input" id="address" name="address" ref={register} placeholder="Address"
+                           defaultValue={employee?.address}/>
                 </FormGroup>
                 <FormGroup label="Phone" labelFor="phone" inline={true} className="form-row" labelInfo="">
-                    <input className="bp3-input" id="phone" name="address" ref={register} placeholder="Phone"/>
+                    <input className="bp3-input" id="phone" name="phone" ref={register} placeholder="Phone"
+                           defaultValue={employee?.phone}/>
                 </FormGroup>
                 <FormGroup label="Mobile" labelFor="mobile" inline={true} className="form-row" labelInfo="">
-                    <input className="bp3-input" id="mobile" name="address" ref={register} placeholder="Mobile"/>
+                    <input className="bp3-input" id="mobile" name="mobile" ref={register} placeholder="Mobile"
+                           defaultValue={employee?.mobile}/>
                 </FormGroup>
                 <FormGroup label="Email" labelFor="email" inline={true} className="form-row" labelInfo="">
-                    <input className="bp3-input" id="email" name="address" ref={register} placeholder="Email"/>
+                    <input className="bp3-input" id="email" name="email" ref={register} placeholder="Email"
+                           defaultValue={employee?.email}/>
                 </FormGroup>
                 <div className={Classes.DIALOG_FOOTER}>
                     <div className={Classes.DIALOG_FOOTER_ACTIONS}>

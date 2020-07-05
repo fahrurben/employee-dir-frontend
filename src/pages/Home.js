@@ -6,7 +6,7 @@ import _ from "lodash";
 import {useHistory} from 'react-router-dom';
 import {FormGroup, Button, Card, Classes, Dialog, Toaster, Intent, Position} from '@blueprintjs/core';
 import {DateInput} from "@blueprintjs/datetime";
-import {FETCH_EMPLOYEES, FETCH_DEPARTMENTS, CREATE_EMPLOYEE} from "../constant";
+import {FETCH_EMPLOYEES, FETCH_DEPARTMENTS, CREATE_EMPLOYEE, RESET_EMPLOYEE_FORM, GET_EMPLOYEE, UPDATE_EMPLOYEE} from "../constant";
 import EmployeeCard from '../components/EmployeeCard';
 import EmployeeForm from '../components/EmployeeForm';
 
@@ -22,6 +22,7 @@ function Home() {
     const history = useHistory();
     const {control, register, handleSubmit, errors} = useForm();
     const [isShowCreate, setIsShowCreate] = useState(false);
+    const [isShowUpdate, setIsShowUpdate] = useState(false);
     const [arrPage, setArrPage] = useState([]);
 
     const isSubmitted = useSelector(state => state.employee.isSubmitted);
@@ -42,13 +43,22 @@ function Home() {
     }, []);
 
     const onSubmit = data => {
-        console.log(data);
         dispatch({type: CREATE_EMPLOYEE, payload: data});
         setIsShowCreate(false);
     };
 
+    const onSubmitUpdate = data => {
+        dispatch({type: UPDATE_EMPLOYEE, payload: data});
+        setIsShowUpdate(false);
+    };
+
     const goToPage = (page) => {
         dispatch({type: FETCH_EMPLOYEES, page: page});
+    };
+
+    const employeeUpdateClicked = (id) => {
+        setIsShowUpdate(true);
+        dispatch({type: GET_EMPLOYEE, payload: id});
     };
 
     useEffect(() => {
@@ -61,7 +71,8 @@ function Home() {
 
     useEffect(() => {
         if (isSubmitted && isSuccess) {
-            AppToaster.show({message: 'Create employee success'});
+            AppToaster.show({message: 'Save employee success'});
+            dispatch({type: RESET_EMPLOYEE_FORM});
         }
     }, [isSubmitted]);
 
@@ -82,7 +93,7 @@ function Home() {
                             employees &&
                             employees.length > 0 &&
                             employees.map((employee, i) => {
-                                return (<EmployeeCard key={i} employee={employee}/>)
+                                return (<EmployeeCard key={i} employee={employee} employeeUpdateClicked={employeeUpdateClicked}/>)
                             })
                         }
                         <div className="flex justify-center items-start space-x-2">
@@ -98,6 +109,7 @@ function Home() {
                     </Card>
                 </div>
             </div>
+
             <Dialog
                 isOpen={isShowCreate}
                 onClose={e => setIsShowCreate(false)}
@@ -108,6 +120,22 @@ function Home() {
                     departments={departments}
                     onFormSubmit={onSubmit}
                     onFormCancel={e => setIsShowCreate(false)}
+                />
+            </Dialog>
+
+            <Dialog
+                isOpen={isShowUpdate}
+                onClose={e => setIsShowUpdate(false)}
+                title="Update Employee"
+                className="crud-modal"
+            >
+                <EmployeeForm
+                    departments={departments}
+                    onFormSubmit={onSubmitUpdate}
+                    onFormCancel={e => {
+                        setIsShowUpdate(false);
+                        dispatch({type: RESET_EMPLOYEE_FORM});
+                    }}
                 />
             </Dialog>
         </>
