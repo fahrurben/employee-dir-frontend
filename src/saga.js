@@ -1,4 +1,4 @@
-import { takeLatest, all, put } from 'redux-saga/effects';
+import {takeLatest, all, put} from 'redux-saga/effects';
 import axios from 'axios';
 import qs from 'qs';
 
@@ -26,12 +26,12 @@ function* loginSubmit(action) {
 
     let response = null;
     try {
-        response = yield axios.post(apiUrl + '/authenticate', { email, password });
+        response = yield axios.post(apiUrl + '/authenticate', {email, password});
         localStorage.setItem(AUTH_TOKEN_KEY, response?.data?.data);
-        yield put({ type: LOGIN_SUBMITTED, payload: { isSuccess: true, message: '' } });
-    } catch(e) {
+        yield put({type: LOGIN_SUBMITTED, payload: {isSuccess: true, message: ''}});
+    } catch (e) {
         const errorMessage = e?.response?.data?.message;
-        yield put({ type: LOGIN_SUBMITTED, payload: { isSuccess: false, message: errorMessage } });
+        yield put({type: LOGIN_SUBMITTED, payload: {isSuccess: false, message: errorMessage}});
     }
 }
 
@@ -45,10 +45,10 @@ function* getDepartments(action) {
     let response = null;
     try {
         response = yield axios.get(apiUrl + '/departments', headerConfig);
-        yield put({ type: FETCH_DEPARTMENTS_SUCCEEDED, payload: { isSuccess: true, data: response.data?.data } });
-    } catch(e) {
+        yield put({type: FETCH_DEPARTMENTS_SUCCEEDED, payload: {isSuccess: true, data: response.data?.data}});
+    } catch (e) {
         const errorMessage = e?.response?.data?.message;
-        yield put({ type: FETCH_DEPARTMENTS_FAILED, payload: { isSuccess: false, message: errorMessage } });
+        yield put({type: FETCH_DEPARTMENTS_FAILED, payload: {isSuccess: false, message: errorMessage}});
     }
 }
 
@@ -64,16 +64,17 @@ function* getEmployees(action) {
     let response = null;
     try {
         response = yield axios.get(apiUrl + '/employees?page=' + page, headerConfig);
-        yield put({ type: FETCH_EMPLOYEES_SUCCEEDED,
+        yield put({
+            type: FETCH_EMPLOYEES_SUCCEEDED,
             payload: {
                 isSuccess: true,
                 data: response.data?.data,
                 meta: response.data?.meta
             }
         });
-    } catch(e) {
+    } catch (e) {
         const errorMessage = e?.response?.data?.message;
-        yield put({ type: FETCH_EMPLOYEES_FAILED, payload: { isSuccess: false, message: errorMessage } });
+        yield put({type: FETCH_EMPLOYEES_FAILED, payload: {isSuccess: false, message: errorMessage}});
     }
 }
 
@@ -87,16 +88,16 @@ function* createEmployee(action) {
     };
 
     try {
-        yield put({ type: CREATE_EMPLOYEE_SUBMITTING });
+        yield put({type: CREATE_EMPLOYEE_SUBMITTING});
 
-        responseCreate = yield axios.post(apiUrl + '/employees', qs.stringify(action.payload),headerConfig);
+        responseCreate = yield axios.post(apiUrl + '/employees', qs.stringify(action.payload), headerConfig);
         response = yield axios.get(apiUrl + '/employees', headerConfig);
 
-        yield put({ type: CREATE_EMPLOYEE_SUCCEEDED, payload: { isSuccess: true, data: responseCreate.data?.data } });
-        yield put({ type: FETCH_EMPLOYEES_SUCCEEDED, payload: { isSuccess: true, data: response.data?.data } });
-    } catch(e) {
+        yield put({type: CREATE_EMPLOYEE_SUCCEEDED, payload: {isSuccess: true, data: responseCreate.data?.data}});
+        yield put({type: FETCH_EMPLOYEES_SUCCEEDED, payload: {isSuccess: true, data: response.data?.data}});
+    } catch (e) {
         const errorMessage = e?.response?.data?.message;
-        yield put({ type: CREATE_EMPLOYEE_FAILED, payload: { isSuccess: false, message: errorMessage } });
+        yield put({type: CREATE_EMPLOYEE_FAILED, payload: {isSuccess: false, message: errorMessage}});
     }
 }
 

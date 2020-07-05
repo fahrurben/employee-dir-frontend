@@ -18,11 +18,11 @@ function employeeReducer(state = {
 }, action) {
     switch (action.type) {
         case CREATE_EMPLOYEE_SUBMITTING:
-            return { ...state, isSubmitted: false, isSuccess: false };
+            return {...state, isSubmitted: false, isSuccess: false};
         case CREATE_EMPLOYEE_SUCCEEDED:
-            return { ...state, isSubmitted: true, isSuccess: true };
+            return {...state, isSubmitted: true, isSuccess: true};
         case CREATE_EMPLOYEE_FAILED:
-            return { ...state, isSubmitted: true, isSuccess: false };
+            return {...state, isSubmitted: true, isSuccess: false};
         case FETCH_EMPLOYEES_SUCCEEDED:
             return {
                 ...state,
@@ -31,9 +31,9 @@ function employeeReducer(state = {
                 totalPage: action.payload.meta?.last_page
             };
         case FETCH_DEPARTMENTS_SUCCEEDED:
-            return { ...state, departments: action.payload.data };
+            return {...state, departments: action.payload.data};
         default:
-            return { ...state };
+            return {...state};
     }
 }
 

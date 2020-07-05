@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useForm, Controller } from "react-hook-form";
+import React, {useState, useEffect, useRef} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
+import {useForm, Controller} from "react-hook-form";
 import moment from "moment";
 import _ from "lodash";
-import { useHistory } from 'react-router-dom';
-import { FormGroup, Button, Card, Classes, Dialog, Toaster, Intent, Position } from '@blueprintjs/core';
-import { DateInput } from "@blueprintjs/datetime";
-import { FETCH_EMPLOYEES, FETCH_DEPARTMENTS, CREATE_EMPLOYEE } from "../constant";
+import {useHistory} from 'react-router-dom';
+import {FormGroup, Button, Card, Classes, Dialog, Toaster, Intent, Position} from '@blueprintjs/core';
+import {DateInput} from "@blueprintjs/datetime";
+import {FETCH_EMPLOYEES, FETCH_DEPARTMENTS, CREATE_EMPLOYEE} from "../constant";
 import EmployeeCard from '../components/EmployeeCard';
 
 const AppToaster = Toaster.create({
@@ -19,7 +19,7 @@ function Home() {
 
     const dispatch = useDispatch();
     const history = useHistory();
-    const { control, register, handleSubmit, errors } = useForm();
+    const {control, register, handleSubmit, errors} = useForm();
     const [isShowCreate, setIsShowCreate] = useState(false);
     const [arrPage, setArrPage] = useState([]);
 
@@ -36,8 +36,8 @@ function Home() {
 
     // component did moint
     useEffect(() => {
-        dispatch({ type: FETCH_EMPLOYEES, page: page });
-        dispatch({ type: FETCH_DEPARTMENTS })
+        dispatch({type: FETCH_EMPLOYEES, page: page});
+        dispatch({type: FETCH_DEPARTMENTS})
     }, []);
 
     const onSubmit = data => {
@@ -46,7 +46,7 @@ function Home() {
     };
 
     const goToPage = (page) => {
-        dispatch({ type: FETCH_EMPLOYEES, page: page });
+        dispatch({type: FETCH_EMPLOYEES, page: page});
     };
 
     useEffect(() => {
@@ -59,7 +59,7 @@ function Home() {
 
     useEffect(() => {
         if (isSubmitted && isSuccess) {
-            AppToaster.show({ message: 'Create employee success' });
+            AppToaster.show({message: 'Create employee success'});
         }
     }, [isSubmitted]);
 
@@ -72,7 +72,7 @@ function Home() {
                             <p className="text-4xl flex">
                                 Employees
                                 <a className="rounded-full h-12 w-12 flex items-center justify-center bg-gray-400 ml-2 bp3-icon-standard bp3-icon-plus"
-                                    onClick={ e => setIsShowCreate(!isShowCreate)}
+                                   onClick={e => setIsShowCreate(!isShowCreate)}
                                 ></a>
                             </p>
                         </div>
@@ -80,7 +80,7 @@ function Home() {
                             employees &&
                             employees.length > 0 &&
                             employees.map((employee, i) => {
-                                return (<EmployeeCard key={i} employee={employee} />)
+                                return (<EmployeeCard key={i} employee={employee}/>)
                             })
                         }
                         <div className="flex justify-center items-start space-x-2">
@@ -88,7 +88,8 @@ function Home() {
                                 arrPage &&
                                 arrPage.length > 0 &&
                                 arrPage.map((value, i) => {
-                                    return (<Button key={i} intent={page === i+1 ? Intent.PRIMARY : Intent.NONE} onClick={e => goToPage(i+1)}>{i+1}</Button>)
+                                    return (<Button key={i} intent={page === i + 1 ? Intent.PRIMARY : Intent.NONE}
+                                                    onClick={e => goToPage(i + 1)}>{i + 1}</Button>)
                                 })
                             }
                         </div>
@@ -103,26 +104,32 @@ function Home() {
             >
                 <form ref={formCreate} onSubmit={handleSubmit(onSubmit)}>
                     <div className={Classes.DIALOG_BODY}>
-                        <FormGroup label="Employee ID" labelFor="employee_id" inline={true} className="form-row" labelInfo="*"
+                        <FormGroup label="Employee ID" labelFor="employee_id" inline={true} className="form-row"
+                                   labelInfo="*"
                                    helperText={errors.employee_id && 'Employee ID is required'}
                                    intent={errors.employee_id && Intent.DANGER}
                         >
-                            <input className="bp3-input" id="employee_id" name="employee_id" ref={register({ required: true})} placeholder="Employee ID" />
+                            <input className="bp3-input" id="employee_id" name="employee_id"
+                                   ref={register({required: true})} placeholder="Employee ID"/>
                         </FormGroup>
-                        <FormGroup label="Firstname" labelFor="firstname" inline={true} className="form-row" labelInfo="*"
+                        <FormGroup label="Firstname" labelFor="firstname" inline={true} className="form-row"
+                                   labelInfo="*"
                                    helperText={errors.firstname && 'Firstname is required'}
                                    intent={errors.firstname && Intent.DANGER}>
-                            <input className="bp3-input" id="firstname" name="firstname" ref={register({ required: true})} placeholder="Firstname" />
+                            <input className="bp3-input" id="firstname" name="firstname"
+                                   ref={register({required: true})} placeholder="Firstname"/>
                         </FormGroup>
                         <FormGroup label="Lastname" labelFor="lastname" inline={true} className="form-row" labelInfo="*"
                                    helperText={errors.lastname && 'Lastname is required'}
                                    intent={errors.lastname && Intent.DANGER}>
-                            <input className="bp3-input" id="lastname" name="lastname" ref={register({ required: true})} placeholder="Lastname" />
+                            <input className="bp3-input" id="lastname" name="lastname" ref={register({required: true})}
+                                   placeholder="Lastname"/>
                         </FormGroup>
                         <FormGroup label="Fullname" labelFor="fullname" inline={true} className="form-row" labelInfo="*"
                                    helperText={errors.fullname && 'Fullname is required'}
                                    intent={errors.fullname && Intent.DANGER}>
-                            <input className="bp3-input" id="fullname" name="fullname" ref={register({ required: true})} placeholder="Fullname" />
+                            <input className="bp3-input" id="fullname" name="fullname" ref={register({required: true})}
+                                   placeholder="Fullname"/>
                         </FormGroup>
                         <FormGroup label="Birthday" labelFor="birthday" inline={true} className="form-row" labelInfo="*"
                                    helperText={errors.birthday && 'Birthday is required'}
@@ -139,13 +146,15 @@ function Home() {
                         <FormGroup label="Position" labelFor="position" inline={true} className="form-row" labelInfo="*"
                                    helperText={errors.position && 'Position is required'}
                                    intent={errors.position && Intent.DANGER}>
-                            <input className="bp3-input" id="position" name="position" ref={register({ required: true})} placeholder="Position" />
+                            <input className="bp3-input" id="position" name="position" ref={register({required: true})}
+                                   placeholder="Position"/>
                         </FormGroup>
-                        <FormGroup label="Department" labelFor="department_id" inline={true} className="form-row" labelInfo="*"
+                        <FormGroup label="Department" labelFor="department_id" inline={true} className="form-row"
+                                   labelInfo="*"
                                    helperText={errors.department_id && 'Department is required'}
                                    intent={errors.department_id && Intent.DANGER}>
                             <div class="bp3-select">
-                                <select name="department_id" ref={register({ required: true})}>
+                                <select name="department_id" ref={register({required: true})}>
                                     <option value="">- Select Department -</option>
                                     {
                                         departments &&
@@ -158,16 +167,18 @@ function Home() {
                             </div>
                         </FormGroup>
                         <FormGroup label="Address" labelFor="address" inline={true} className="form-row" labelInfo="">
-                            <input className="bp3-input" id="address" name="address" ref={register} placeholder="Address" />
+                            <input className="bp3-input" id="address" name="address" ref={register}
+                                   placeholder="Address"/>
                         </FormGroup>
                         <FormGroup label="Phone" labelFor="phone" inline={true} className="form-row" labelInfo="">
-                            <input className="bp3-input" id="phone" name="address" ref={register} placeholder="Phone" />
+                            <input className="bp3-input" id="phone" name="address" ref={register} placeholder="Phone"/>
                         </FormGroup>
                         <FormGroup label="Mobile" labelFor="mobile" inline={true} className="form-row" labelInfo="">
-                            <input className="bp3-input" id="mobile" name="address" ref={register} placeholder="Mobile" />
+                            <input className="bp3-input" id="mobile" name="address" ref={register}
+                                   placeholder="Mobile"/>
                         </FormGroup>
                         <FormGroup label="Email" labelFor="email" inline={true} className="form-row" labelInfo="">
-                            <input className="bp3-input" id="email" name="address" ref={register} placeholder="Email" />
+                            <input className="bp3-input" id="email" name="address" ref={register} placeholder="Email"/>
                         </FormGroup>
                         <div className={Classes.DIALOG_FOOTER}>
                             <div className={Classes.DIALOG_FOOTER_ACTIONS}>
