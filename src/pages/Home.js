@@ -23,6 +23,7 @@ function Home() {
     const {control, register, handleSubmit, errors} = useForm();
     const [isShowCreate, setIsShowCreate] = useState(false);
     const [isShowUpdate, setIsShowUpdate] = useState(false);
+    const [isShowView, setIsShowView] = useState(false);
     const [arrPage, setArrPage] = useState([]);
 
     const isSubmitted = useSelector(state => state.employee.isSubmitted);
@@ -61,6 +62,11 @@ function Home() {
         dispatch({type: GET_EMPLOYEE, payload: id});
     };
 
+    const employeeViewClicked = (id) => {
+        setIsShowView(true);
+        dispatch({type: GET_EMPLOYEE, payload: id});
+    };
+
     useEffect(() => {
         if (!isNaN(totalPage)) {
             let arr = new Array(totalPage);
@@ -93,7 +99,10 @@ function Home() {
                             employees &&
                             employees.length > 0 &&
                             employees.map((employee, i) => {
-                                return (<EmployeeCard key={i} employee={employee} employeeUpdateClicked={employeeUpdateClicked}/>)
+                                return (<EmployeeCard key={i} employee={employee}
+                                                      employeeUpdateClicked={employeeUpdateClicked}
+                                                      employeeViewClicked={employeeViewClicked}
+                                        />)
                             })
                         }
                         <div className="flex justify-center items-start space-x-2">
@@ -134,6 +143,21 @@ function Home() {
                     onFormSubmit={onSubmitUpdate}
                     onFormCancel={e => {
                         setIsShowUpdate(false);
+                        dispatch({type: RESET_EMPLOYEE_FORM});
+                    }}
+                />
+            </Dialog>
+
+            <Dialog
+                isOpen={isShowView}
+                onClose={e => setIsShowView(false)}
+                title="View Employee"
+                className="crud-modal"
+            >
+                <EmployeeForm
+                    departments={departments}
+                    onFormCancel={e => {
+                        setIsShowView(false);
                         dispatch({type: RESET_EMPLOYEE_FORM});
                     }}
                 />

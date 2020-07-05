@@ -21,7 +21,7 @@ function EmployeeCard(props) {
                         <p><a href={'email:' + employee.email}><span
                             className="bp3-icon-standard bp3-icon-envelope"></span> Email</a></p>
                     }
-                    <p><a><span className="bp3-icon-standard bp3-icon-document"></span> View</a></p>
+                    <p><a onClick={e => props.employeeViewClicked(employee.id)}><span className="bp3-icon-standard bp3-icon-document"></span> View</a></p>
                     <p><a onClick={e => props.employeeUpdateClicked(employee.id)}><span className="bp3-icon-standard bp3-icon-edit"></span> Edit</a></p>
                 </div>
             </div>

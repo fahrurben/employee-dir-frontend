@@ -111,9 +111,12 @@ function EmployeeForm(props) {
                         <Button intent={Intent.NONE} onClick={props.onFormCancel}>
                             Cancel
                         </Button>
-                        <Button intent={Intent.PRIMARY} onClick={handleSubmit(props.onFormSubmit)}>
-                            Submit
-                        </Button>
+                        {
+                            typeof props.onFormSubmit !== "undefined" &&
+                                <Button intent={Intent.PRIMARY} onClick={handleSubmit(props.onFormSubmit)}>
+                                    Submit
+                                </Button>
+                        }
                     </div>
                 </div>
             </div>
