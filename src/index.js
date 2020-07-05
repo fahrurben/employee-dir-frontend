@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import Login from './pages/Login';
+import Home from './pages/Home';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
@@ -14,6 +15,7 @@ ReactDOM.render(
       <Provider store={store}>
           <Router>
               <div className="container mx-auto">
+                  <Route exact path="/Home" component={Home} />
                   <Route exact path="/" component={Login} />
               </div>
           </Router>

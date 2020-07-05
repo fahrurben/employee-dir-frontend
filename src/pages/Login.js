@@ -14,6 +14,7 @@ function Login() {
     const isSubmitted = useSelector(state => state.login.isSubmitted);
     const errorMessage = useSelector(state => state.login.errorMessage);
     const isSuccess = useSelector(state => state.login.isSuccess);
+    const isLoading = useSelector(state => state.login.isLoading);
 
     const emailOnChange = e => {
         setEmail(e.target.value);
@@ -24,13 +25,13 @@ function Login() {
 
     const submitClicked = e => {
         e.preventDefault();
-
         dispatch({type: LOGIN_SUBMITTING, payload: { email, password }});
     };
 
     useEffect(() => {
         if (isSubmitted && isSuccess) {
-            console.log(localStorage.getItem(AUTH_TOKEN_KEY));
+            dispatch({type: LOGIN_RESET});
+            history.push("/home");
         }
     }, [isSubmitted]);
 

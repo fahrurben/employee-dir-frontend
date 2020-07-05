@@ -2,3 +2,40 @@
 @import "~tailwindcss/dist/utilities.css";
 @import "~@blueprintjs/core/lib/css/blueprint.css";
 @import "~@blueprintjs/icons/lib/css/blueprint-icons.css";
+@import "~@blueprintjs/datetime/lib/css/blueprint-datetime.css";
+
+.employee-item {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: stretch;
+}
+    .photo-box {
+        flex: 0 0 150px;
+        flex-flow: column nowrap;
+        justify-content: flex-start;
+    }
+    .details-box {
+        flex: 1 1;
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: flex-start;
+        align-items: flex-start;
+    }
+        .details-content {
+            flex: 1 1;
+        }
+
+        .details-operations {
+            flex: 0 0 150px;
+            flex-flow: column nowrap;
+            justify-content: flex-start;
+        }
+
+.crud-modal {
+    width: 800px;
+}
+.form-row label {
+    width: 10rem;
+}
