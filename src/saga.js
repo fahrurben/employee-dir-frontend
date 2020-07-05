@@ -13,6 +13,7 @@ import {
     FETCH_DEPARTMENTS_SUCCEEDED,
     FETCH_DEPARTMENTS_FAILED,
     CREATE_EMPLOYEE,
+    CREATE_EMPLOYEE_SUBMITTING,
     CREATE_EMPLOYEE_SUCCEEDED,
     CREATE_EMPLOYEE_FAILED,
 } from './constant';
@@ -86,6 +87,8 @@ function* createEmployee(action) {
     };
 
     try {
+        yield put({ type: CREATE_EMPLOYEE_SUBMITTING });
+
         responseCreate = yield axios.post(apiUrl + '/employees', qs.stringify(action.payload),headerConfig);
         response = yield axios.get(apiUrl + '/employees', headerConfig);
 

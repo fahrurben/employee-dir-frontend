@@ -4,10 +4,16 @@ import { useForm, Controller } from "react-hook-form";
 import moment from "moment";
 import _ from "lodash";
 import { useHistory } from 'react-router-dom';
-import { FormGroup, InputGroup, Button, Card, Colors, Overlay, Classes, Dialog, AnchorButton, Intent } from '@blueprintjs/core';
+import { FormGroup, Button, Card, Classes, Dialog, Toaster, Intent, Position } from '@blueprintjs/core';
 import { DateInput } from "@blueprintjs/datetime";
 import { FETCH_EMPLOYEES, FETCH_DEPARTMENTS, CREATE_EMPLOYEE } from "../constant";
 import EmployeeCard from '../components/EmployeeCard';
+
+const AppToaster = Toaster.create({
+    className: "recipe-toaster",
+    position: Position.TOP,
+    intent: Intent.SUCCESS,
+});
 
 function Home() {
 
@@ -36,6 +42,7 @@ function Home() {
 
     const onSubmit = data => {
         dispatch({type: CREATE_EMPLOYEE, payload: data});
+        setIsShowCreate(false);
     };
 
     const goToPage = (page) => {
@@ -43,10 +50,18 @@ function Home() {
     };
 
     useEffect(() => {
-        let arr = new Array(totalPage - 0);
-        _.fill(arr, 0, 0, totalPage);
-        setArrPage(arr);
+        if (!isNaN(totalPage)) {
+            let arr = new Array(totalPage);
+            _.fill(arr, 0, 0, totalPage);
+            setArrPage(arr);
+        }
     }, [totalPage]);
+
+    useEffect(() => {
+        if (isSubmitted && isSuccess) {
+            AppToaster.show({ message: 'Create employee success' });
+        }
+    }, [isSubmitted]);
 
     return (
         <>
@@ -68,7 +83,7 @@ function Home() {
                                 return (<EmployeeCard key={i} employee={employee} />)
                             })
                         }
-                        <div className="flex justify-center items-start">
+                        <div className="flex justify-center items-start space-x-2">
                             {
                                 arrPage &&
                                 arrPage.length > 0 &&

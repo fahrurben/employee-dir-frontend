@@ -1,6 +1,9 @@
 import {
     FETCH_EMPLOYEES_SUCCEEDED,
-    FETCH_DEPARTMENTS_SUCCEEDED
+    FETCH_DEPARTMENTS_SUCCEEDED,
+    CREATE_EMPLOYEE_SUBMITTING,
+    CREATE_EMPLOYEE_SUCCEEDED,
+    CREATE_EMPLOYEE_FAILED,
 } from '../constant';
 
 function employeeReducer(state = {
@@ -14,6 +17,12 @@ function employeeReducer(state = {
     departments: [],
 }, action) {
     switch (action.type) {
+        case CREATE_EMPLOYEE_SUBMITTING:
+            return { ...state, isSubmitted: false, isSuccess: false };
+        case CREATE_EMPLOYEE_SUCCEEDED:
+            return { ...state, isSubmitted: true, isSuccess: true };
+        case CREATE_EMPLOYEE_FAILED:
+            return { ...state, isSubmitted: true, isSuccess: false };
         case FETCH_EMPLOYEES_SUCCEEDED:
             return {
                 ...state,
