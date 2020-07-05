@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useForm, Controller } from "react-hook-form";
 import moment from "moment";
+import _ from "lodash";
 import { useHistory } from 'react-router-dom';
 import { FormGroup, InputGroup, Button, Card, Colors, Overlay, Classes, Dialog, AnchorButton, Intent } from '@blueprintjs/core';
 import { DateInput } from "@blueprintjs/datetime";
@@ -14,26 +15,38 @@ function Home() {
     const history = useHistory();
     const { control, register, handleSubmit, errors } = useForm();
     const [isShowCreate, setIsShowCreate] = useState(false);
+    const [arrPage, setArrPage] = useState([]);
 
     const isSubmitted = useSelector(state => state.employee.isSubmitted);
     const errorMessage = useSelector(state => state.employee.errorMessage);
     const isSuccess = useSelector(state => state.employee.isSuccess);
     const isLoading = useSelector(state => state.employee.isLoading);
     const employees = useSelector(state => state.employee.list);
+    const page = useSelector(state => state.employee.page);
+    const totalPage = useSelector(state => state.employee.totalPage);
     const departments = useSelector(state => state.employee.departments);
 
     const formCreate = useRef(null);
 
     // component did moint
     useEffect(() => {
-        dispatch({ type: FETCH_EMPLOYEES });
+        dispatch({ type: FETCH_EMPLOYEES, page: page });
         dispatch({ type: FETCH_DEPARTMENTS })
     }, []);
 
     const onSubmit = data => {
-      console.log(data);
-      dispatch({type: CREATE_EMPLOYEE, payload: data});
+        dispatch({type: CREATE_EMPLOYEE, payload: data});
     };
+
+    const goToPage = (page) => {
+        dispatch({ type: FETCH_EMPLOYEES, page: page });
+    };
+
+    useEffect(() => {
+        let arr = new Array(totalPage - 0);
+        _.fill(arr, 0, 0, totalPage);
+        setArrPage(arr);
+    }, [totalPage]);
 
     return (
         <>
@@ -51,10 +64,19 @@ function Home() {
                         {
                             employees &&
                             employees.length > 0 &&
-                            employees.map((employee) => {
-                                return (<EmployeeCard employee={employee} />)
+                            employees.map((employee, i) => {
+                                return (<EmployeeCard key={i} employee={employee} />)
                             })
                         }
+                        <div className="flex justify-center items-start">
+                            {
+                                arrPage &&
+                                arrPage.length > 0 &&
+                                arrPage.map((value, i) => {
+                                    return (<Button key={i} intent={page === i+1 ? Intent.PRIMARY : Intent.NONE} onClick={e => goToPage(i+1)}>{i+1}</Button>)
+                                })
+                            }
+                        </div>
                     </Card>
                 </div>
             </div>

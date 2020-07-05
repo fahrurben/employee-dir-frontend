@@ -58,10 +58,18 @@ function* getEmployees(action) {
         }
     };
 
+    let page = action?.page;
+
     let response = null;
     try {
-        response = yield axios.get(apiUrl + '/employees', headerConfig);
-        yield put({ type: FETCH_EMPLOYEES_SUCCEEDED, payload: { isSuccess: true, data: response.data?.data } });
+        response = yield axios.get(apiUrl + '/employees?page=' + page, headerConfig);
+        yield put({ type: FETCH_EMPLOYEES_SUCCEEDED,
+            payload: {
+                isSuccess: true,
+                data: response.data?.data,
+                meta: response.data?.meta
+            }
+        });
     } catch(e) {
         const errorMessage = e?.response?.data?.message;
         yield put({ type: FETCH_EMPLOYEES_FAILED, payload: { isSuccess: false, message: errorMessage } });
