@@ -1,6 +1,7 @@
 import {takeLatest, all, put} from 'redux-saga/effects';
 import axios from 'axios';
-import qs from 'qs';
+import _ from 'lodash';
+import moment from 'moment';
 
 import {
     AUTH_TOKEN_KEY,
@@ -113,7 +114,19 @@ function* createEmployee(action) {
     try {
         yield put({type: CREATE_EMPLOYEE_SUBMITTING});
 
-        responseCreate = yield axios.post(apiUrl + '/employees', qs.stringify(action.payload), headerConfig);
+        let formData = new FormData();
+        _.forIn(action.payload, function(value, field) {
+            if (!_.isArrayLikeObject(value)) {
+                formData.append(field, value);
+            }
+        });
+
+        formData.set('birthday', moment(action.payload.birthday).format('YYYY-MM-DD'));
+        if (_.isArrayLikeObject(action.payload.photo) && action.payload.photo[0]) {
+            formData.append('photo', action.payload.photo[0]);
+        }
+
+        responseCreate = yield axios.post(apiUrl + '/employees', formData, headerConfig);
         response = yield axios.get(apiUrl + '/employees', headerConfig);
 
         yield put({type: CREATE_EMPLOYEE_SUCCEEDED, payload: {isSuccess: true, data: responseCreate.data?.data}});
@@ -136,7 +149,19 @@ function* updateEmployee(action) {
     try {
         yield put({type: UPDATE_EMPLOYEE_SUBMITTING});
 
-        responseCreate = yield axios.post(apiUrl + '/employees/' + action.payload.id , qs.stringify(action.payload), headerConfig);
+        let formData = new FormData();
+        _.forIn(action.payload, function(value, field) {
+            if (!_.isArrayLikeObject(value)) {
+                formData.append(field, value);
+            }
+        });
+
+        formData.set('birthday', moment(action.payload.birthday).format('YYYY-MM-DD'));
+        if (_.isArrayLikeObject(action.payload.photo) && action.payload.photo[0]) {
+            formData.append('photo', action.payload.photo[0]);
+        }
+
+        responseCreate = yield axios.post(apiUrl + '/employees/' + action.payload.id , formData, headerConfig);
         response = yield axios.get(apiUrl + '/employees', headerConfig);
 
         yield put({type: UPDATE_EMPLOYEE_SUCCEEDED, payload: {isSuccess: true, data: responseCreate.data?.data}});

@@ -2,11 +2,12 @@ import React from 'react';
 
 function EmployeeCard(props) {
     const employee = props.employee;
-
+    const photoUrl = process.env.REACT_APP_PHOTO_URL;
+    const photo = employee.photo ? photoUrl + employee.photo : 'profile-pic.jpg';
     return (
         <div className="employee-item border border-t-4 border-solid border-gray-400 p-4 space-x-3">
             <div className="photo-box">
-                <img src="profile-pic.jpg" width="150"></img>
+                <img src={photo} width="150" height="150"></img>
             </div>
             <div className="details-box p-2 p-t-4 flex">
                 <div className="details-content">

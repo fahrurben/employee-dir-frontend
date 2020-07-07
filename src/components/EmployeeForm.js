@@ -26,6 +26,15 @@ function EmployeeForm(props) {
         setValue("email", employee.email);
     }, [employee]);
 
+    // useEffect(() => {
+    //     register({ name: 'photo' });
+    // }, [register]);
+
+    const uploadChange = (e) => {
+        console.log(e.target);
+        setValue('photo', e.target.files);
+    };
+
     return (
         <form onSubmit={handleSubmit(props.onFormSubmit)}>
             <div className={Classes.DIALOG_BODY}>
@@ -106,6 +115,12 @@ function EmployeeForm(props) {
                     <input className="bp3-input" id="email" name="email" ref={register} placeholder="Email"
                            defaultValue={employee?.email}/>
                 </FormGroup>
+                {
+                    typeof props.onFormSubmit !== "undefined" &&
+                    <FormGroup label="Photo" labelFor="photo" inline={true} className="form-row" labelInfo="">
+                        <input type="file" name="photo" ref={register}/>
+                    </FormGroup>
+                }
                 <div className={Classes.DIALOG_FOOTER}>
                     <div className={Classes.DIALOG_FOOTER_ACTIONS}>
                         <Button intent={Intent.NONE} onClick={props.onFormCancel}>
