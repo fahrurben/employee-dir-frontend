@@ -24,6 +24,7 @@ function EmployeeCard(props) {
                     }
                     <p><a onClick={e => props.employeeViewClicked(employee.id)}><span className="bp3-icon-standard bp3-icon-document"></span> View</a></p>
                     <p><a onClick={e => props.employeeUpdateClicked(employee.id)}><span className="bp3-icon-standard bp3-icon-edit"></span> Edit</a></p>
+                    <p><a onClick={e => props.employeeDeleteClicked(employee.id)}><span className="bp3-icon-standard bp3-icon-trash"></span> Delete</a></p>
                 </div>
             </div>
         </div>

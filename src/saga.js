@@ -23,6 +23,10 @@ import {
     UPDATE_EMPLOYEE_SUBMITTING,
     UPDATE_EMPLOYEE_SUCCEEDED,
     UPDATE_EMPLOYEE_FAILED,
+    DELETE_EMPLOYEE_SUBMITTING,
+    DELETE_EMPLOYEE_SUCCEEDED,
+    DELETE_EMPLOYEE_FAILED,
+    DELETE_EMPLOYEE,
 } from './constant';
 
 const apiUrl = process.env.REACT_APP_API_URL;
@@ -172,6 +176,29 @@ function* updateEmployee(action) {
     }
 }
 
+function* deleteEmployee(action) {
+    let response;
+
+    const headerConfig = {
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem(AUTH_TOKEN_KEY)
+        }
+    };
+
+    try {
+        yield put({type: DELETE_EMPLOYEE_SUBMITTING});
+
+        yield axios.delete(apiUrl + '/employees/' + action.payload , headerConfig);
+        response = yield axios.get(apiUrl + '/employees', headerConfig);
+
+        yield put({type: DELETE_EMPLOYEE_SUCCEEDED, payload: {isSuccess: true}});
+        yield put({type: FETCH_EMPLOYEES_SUCCEEDED, payload: {isSuccess: true, data: response.data?.data}});
+    } catch (e) {
+        const errorMessage = e?.response?.data?.message;
+        yield put({type: DELETE_EMPLOYEE_FAILED, payload: {isSuccess: false, message: errorMessage}});
+    }
+}
+
 // notice how we now only export the rootSaga
 // single entry point to start all Sagas at once
 export default function* rootSaga() {
@@ -182,5 +209,6 @@ export default function* rootSaga() {
         yield takeLatest(CREATE_EMPLOYEE, createEmployee),
         yield takeLatest(GET_EMPLOYEE, getEmployee),
         yield takeLatest(UPDATE_EMPLOYEE, updateEmployee),
+        yield takeLatest(DELETE_EMPLOYEE, deleteEmployee),
     ])
 }

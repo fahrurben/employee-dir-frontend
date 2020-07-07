@@ -4,9 +4,17 @@ import {useForm, Controller} from "react-hook-form";
 import moment from "moment";
 import _ from "lodash";
 import {useHistory} from 'react-router-dom';
-import {FormGroup, Button, Card, Classes, Dialog, Toaster, Intent, Position} from '@blueprintjs/core';
+import {Alert, Button, Card, Classes, Dialog, Toaster, Intent, Position} from '@blueprintjs/core';
 import {DateInput} from "@blueprintjs/datetime";
-import {FETCH_EMPLOYEES, FETCH_DEPARTMENTS, CREATE_EMPLOYEE, RESET_EMPLOYEE_FORM, GET_EMPLOYEE, UPDATE_EMPLOYEE} from "../constant";
+import {
+    FETCH_EMPLOYEES,
+    FETCH_DEPARTMENTS,
+    CREATE_EMPLOYEE,
+    RESET_EMPLOYEE_FORM,
+    GET_EMPLOYEE,
+    UPDATE_EMPLOYEE,
+    DELETE_EMPLOYEE
+} from "../constant";
 import EmployeeCard from '../components/EmployeeCard';
 import EmployeeForm from '../components/EmployeeForm';
 
@@ -23,8 +31,10 @@ function Home() {
     const {control, register, handleSubmit, errors} = useForm();
     const [isShowCreate, setIsShowCreate] = useState(false);
     const [isShowUpdate, setIsShowUpdate] = useState(false);
+    const [isShowDelete, setIsShowDelete] = useState(false);
     const [isShowView, setIsShowView] = useState(false);
     const [arrPage, setArrPage] = useState([]);
+    const [currId, setCurrId] = useState(null);
 
     const isSubmitted = useSelector(state => state.employee.isSubmitted);
     const errorMessage = useSelector(state => state.employee.errorMessage);
@@ -67,6 +77,17 @@ function Home() {
         dispatch({type: GET_EMPLOYEE, payload: id});
     };
 
+    const employeeDeleteClicked = (id) => {
+        setIsShowDelete(true);
+        setCurrId(id);
+    };
+
+    const confirmDeleteClicked = () => {
+        dispatch({type: DELETE_EMPLOYEE, payload: currId});
+        setCurrId(null);
+        setIsShowDelete(false);
+    };
+
     useEffect(() => {
         if (!isNaN(totalPage)) {
             let arr = new Array(totalPage);
@@ -102,6 +123,7 @@ function Home() {
                                 return (<EmployeeCard key={i} employee={employee}
                                                       employeeUpdateClicked={employeeUpdateClicked}
                                                       employeeViewClicked={employeeViewClicked}
+                                                      employeeDeleteClicked={employeeDeleteClicked}
                                         />)
                             })
                         }
@@ -162,6 +184,20 @@ function Home() {
                     }}
                 />
             </Dialog>
+
+            <Alert
+                cancelButtonText="No"
+                confirmButtonText="Yes"
+                icon="trash"
+                intent={Intent.DANGER}
+                isOpen={isShowDelete}
+                onCancel={e => setIsShowDelete(false)}
+                onConfirm={confirmDeleteClicked}
+            >
+                <p>
+                    Are you sure to delete this employee data ?
+                </p>
+            </Alert>
         </>
     );
 }
