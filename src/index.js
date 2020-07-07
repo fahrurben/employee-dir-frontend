@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import Header from './components/Header';
 import Login from './pages/Login';
 import Home from './pages/Home';
 import * as serviceWorker from './serviceWorker';
@@ -15,6 +16,7 @@ ReactDOM.render(
       <Provider store={store}>
           <Router>
               <div className="container mx-auto">
+                  <Header/>
                   <Route exact path="/Home" component={Home} />
                   <Route exact path="/" component={Login} />
               </div>
