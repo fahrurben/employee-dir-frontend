@@ -130,7 +130,7 @@ function Home() {
                         <div className="flex justify-center items-start space-x-2">
                             {
                                 arrPage &&
-                                arrPage.length > 0 &&
+                                arrPage.length > 1 &&
                                 arrPage.map((value, i) => {
                                     return (<Button key={i} intent={page === i + 1 ? Intent.PRIMARY : Intent.NONE}
                                                     onClick={e => goToPage(i + 1)}>{i + 1}</Button>)
