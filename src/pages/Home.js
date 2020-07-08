@@ -1,22 +1,14 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
-import {useForm, Controller} from "react-hook-form";
-import moment from "moment";
+import {connect, useSelector, useDispatch} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {useForm} from "react-hook-form";
 import _ from "lodash";
 import {useHistory} from 'react-router-dom';
 import {Alert, Button, Card, Classes, Dialog, Toaster, Intent, Position} from '@blueprintjs/core';
-import {DateInput} from "@blueprintjs/datetime";
-import {
-    FETCH_EMPLOYEES,
-    FETCH_DEPARTMENTS,
-    CREATE_EMPLOYEE,
-    RESET_EMPLOYEE_FORM,
-    GET_EMPLOYEE,
-    UPDATE_EMPLOYEE,
-    DELETE_EMPLOYEE
-} from "../constant";
 import EmployeeCard from '../components/EmployeeCard';
 import EmployeeForm from '../components/EmployeeForm';
+
+import {fetchEmployees, fetchDepartments, getEmployee, createEmployee, updateEmployee, deleteEmployee, resetEmployeeForm} from '../actions/EmployeeAction';
 
 const AppToaster = Toaster.create({
     className: "recipe-toaster",
@@ -24,11 +16,8 @@ const AppToaster = Toaster.create({
     intent: Intent.SUCCESS,
 });
 
-function Home() {
+function Home(props) {
 
-    const dispatch = useDispatch();
-    const history = useHistory();
-    const {control, register, handleSubmit, errors} = useForm();
     const [isShowCreate, setIsShowCreate] = useState(false);
     const [isShowUpdate, setIsShowUpdate] = useState(false);
     const [isShowDelete, setIsShowDelete] = useState(false);
@@ -37,9 +26,7 @@ function Home() {
     const [currId, setCurrId] = useState(null);
 
     const isSubmitted = useSelector(state => state.employee.isSubmitted);
-    const errorMessage = useSelector(state => state.employee.errorMessage);
     const isSuccess = useSelector(state => state.employee.isSuccess);
-    const isLoading = useSelector(state => state.employee.isLoading);
     const employees = useSelector(state => state.employee.list);
     const page = useSelector(state => state.employee.page);
     const totalPage = useSelector(state => state.employee.totalPage);
@@ -49,32 +36,32 @@ function Home() {
 
     // component did moint
     useEffect(() => {
-        dispatch({type: FETCH_EMPLOYEES, page: page});
-        dispatch({type: FETCH_DEPARTMENTS})
+        props.fetchEmployees(page);
+        props.fetchDepartments();
     }, []);
 
     const onSubmit = data => {
-        dispatch({type: CREATE_EMPLOYEE, payload: data});
+        props.createEmployee(data);
         setIsShowCreate(false);
     };
 
     const onSubmitUpdate = data => {
-        dispatch({type: UPDATE_EMPLOYEE, payload: data});
+        props.updateEmployee(data);
         setIsShowUpdate(false);
     };
 
     const goToPage = (page) => {
-        dispatch({type: FETCH_EMPLOYEES, page: page});
+        props.fetchEmployees(page);
     };
 
     const employeeUpdateClicked = (id) => {
         setIsShowUpdate(true);
-        dispatch({type: GET_EMPLOYEE, payload: id});
+        props.getEmployee(id);
     };
 
     const employeeViewClicked = (id) => {
         setIsShowView(true);
-        dispatch({type: GET_EMPLOYEE, payload: id});
+        props.getEmployee(id);
     };
 
     const employeeDeleteClicked = (id) => {
@@ -83,7 +70,7 @@ function Home() {
     };
 
     const confirmDeleteClicked = () => {
-        dispatch({type: DELETE_EMPLOYEE, payload: currId});
+        props.deleteEmployee(currId);
         setCurrId(null);
         setIsShowDelete(false);
     };
@@ -99,7 +86,7 @@ function Home() {
     useEffect(() => {
         if (isSubmitted && isSuccess) {
             AppToaster.show({message: 'Save employee success'});
-            dispatch({type: RESET_EMPLOYEE_FORM});
+            props.resetEmployeeForm();
         }
     }, [isSubmitted]);
 
@@ -143,14 +130,14 @@ function Home() {
 
             <Dialog
                 isOpen={isShowCreate}
-                onClose={e => setIsShowCreate(false)}
+                onClose={() => setIsShowCreate(false)}
                 title="Create Employee"
                 className="crud-modal"
             >
                 <EmployeeForm
                     departments={departments}
                     onFormSubmit={onSubmit}
-                    onFormCancel={e => setIsShowCreate(false)}
+                    onFormCancel={() => setIsShowCreate(false)}
                 />
             </Dialog>
 
@@ -163,9 +150,9 @@ function Home() {
                 <EmployeeForm
                     departments={departments}
                     onFormSubmit={onSubmitUpdate}
-                    onFormCancel={e => {
+                    onFormCancel={() => {
                         setIsShowUpdate(false);
-                        dispatch({type: RESET_EMPLOYEE_FORM});
+                        props.resetEmployeeForm();
                     }}
                 />
             </Dialog>
@@ -180,7 +167,7 @@ function Home() {
                     departments={departments}
                     onFormCancel={e => {
                         setIsShowView(false);
-                        dispatch({type: RESET_EMPLOYEE_FORM});
+                        props.resetEmployeeForm();
                     }}
                 />
             </Dialog>
@@ -202,4 +189,19 @@ function Home() {
     );
 }
 
-export default Home;
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({
+        fetchEmployees,
+        fetchDepartments,
+        getEmployee,
+        createEmployee,
+        updateEmployee,
+        deleteEmployee,
+        resetEmployeeForm
+    }, dispatch)
+}
+
+export default connect(
+    null,
+    mapDispatchToProps
+)(Home);
