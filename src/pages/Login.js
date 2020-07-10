@@ -48,6 +48,7 @@ function Login() {
                         label="Email"
                         labelFor="email"
                         labelInfo="(required)"
+                        helperText="Demo account: admin@edir.com"
                     >
                         <InputGroup id="email" placeholder=""  onChange={emailOnChange}  />
                     </FormGroup>
@@ -55,6 +56,7 @@ function Login() {
                         label="Password"
                         labelFor="password"
                         labelInfo="(required)"
+                        helperText="Demo password: admin"
                     >
                         <InputGroup id="password" placeholder="" type="password" onChange={passwordOnChange} />
                     </FormGroup>
