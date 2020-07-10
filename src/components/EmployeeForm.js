@@ -74,6 +74,8 @@ function EmployeeForm(props) {
                         formatDate={date => moment(date).format('DD-MM-YYYY')}
                         parseDate={str => new Date(str)}
                         defaultValue={employee?.birthday}
+                        minDate={new Date(1960, 0, 1)}
+                        maxDate={new Date(2050, 0, 1)}
                     />
                 </FormGroup>
                 <FormGroup label="Position" labelFor="position" inline={true} className="form-row" labelInfo="*"
