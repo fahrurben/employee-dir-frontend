@@ -20,10 +20,20 @@ import {
     UPDATE_EMPLOYEE_FAILED,
     DELETE_EMPLOYEE_SUBMITTING,
     DELETE_EMPLOYEE_SUCCEEDED,
-    DELETE_EMPLOYEE_FAILED,
+    DELETE_EMPLOYEE_FAILED, CHECK_AVAILABILITY_SUBMITTING, CHECK_AVAILABILITY_SUBMITTED,
 } from '../constant';
 
 const apiUrl = process.env.REACT_APP_API_URL;
+
+function* checkBackendAvailability() {
+
+    try {
+        yield put({type: CHECK_AVAILABILITY_SUBMITTING});
+        yield axios.post(apiUrl + '/authenticate', {});
+    } catch (e) {}
+
+    yield put({type: CHECK_AVAILABILITY_SUBMITTED});
+}
 
 function* loginSubmit(action) {
     const email = action.payload.email;
@@ -158,6 +168,7 @@ function* deleteEmployee(action) {
 }
 
 export {
+    checkBackendAvailability,
     loginSubmit,
     getEmployees,
     getDepartments,

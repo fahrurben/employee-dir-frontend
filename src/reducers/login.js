@@ -1,4 +1,10 @@
-import { LOGIN_SUBMITTING, LOGIN_SUBMITTED, LOGIN_RESET} from '../constant';
+import {
+    LOGIN_SUBMITTING,
+    LOGIN_SUBMITTED,
+    LOGIN_RESET,
+    CHECK_AVAILABILITY_SUBMITTING,
+    CHECK_AVAILABILITY_SUBMITTED
+} from '../constant';
 
 function loginReducer(state = {
     isSubmitted: false,
@@ -7,12 +13,16 @@ function loginReducer(state = {
     errorMessage: '',
 }, action) {
     switch (action.type) {
+        case CHECK_AVAILABILITY_SUBMITTING:
+            return { ...state, isLoading: true }
         case LOGIN_SUBMITTING:
             return {
                 ...state,
                 isSubmitted: false,
                 isLoading: true,
             };
+        case CHECK_AVAILABILITY_SUBMITTED:
+            return { ...state, isLoading: false }
         case LOGIN_SUBMITTED:
             return {
                 ...state,

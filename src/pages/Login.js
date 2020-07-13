@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { FormGroup, InputGroup, Button, Card, Colors } from '@blueprintjs/core';
+import { FormGroup, InputGroup, Button, Card, Colors, Spinner } from '@blueprintjs/core';
 
-import { LOGIN_SUBMITTING, LOGIN_RESET, AUTH_TOKEN_KEY } from '../constant';
+import {LOGIN_SUBMITTING, LOGIN_RESET, AUTH_TOKEN_KEY, CHECK_AVAILABILITY} from '../constant';
 
 function Login() {
 
@@ -28,6 +28,11 @@ function Login() {
         dispatch({type: LOGIN_SUBMITTING, payload: { email, password }});
     };
 
+    // component did mount
+    useEffect(() => {
+        dispatch({type: CHECK_AVAILABILITY});
+    }, []);
+
     useEffect(() => {
         if (isSubmitted && isSuccess) {
             dispatch({type: LOGIN_RESET});
@@ -39,28 +44,34 @@ function Login() {
         <div className="container mx-auto">
             <div className="flex justify-center items-center bg-gray-200 h-screen">
                 <Card interactive={true} className="w-1/3">
-                    <h3>Login</h3>
-                    {
-                        isSubmitted && !isSuccess &&
-                        <div style={{ color: Colors.RED3 }}>{ errorMessage }</div>
+                    {isLoading
+                        ? <Spinner size={50}/>
+                        : <div>
+                            <h3>Login</h3>
+                            {
+                                isSubmitted && !isSuccess &&
+                                <div style={{color: Colors.RED3}}>{errorMessage}</div>
+                            }
+                            <FormGroup
+                                label="Email"
+                                labelFor="email"
+                                labelInfo="(required)"
+                                helperText="Demo account: admin@edir.com"
+                            >
+                                <InputGroup id="email" placeholder="" onChange={emailOnChange}/>
+                            </FormGroup>
+                            <FormGroup
+                                label="Password"
+                                labelFor="password"
+                                labelInfo="(required)"
+                                helperText="Demo password: admin"
+                            >
+                                <InputGroup id="password" placeholder="" type="password"
+                                            onChange={passwordOnChange}/>
+                            </FormGroup>
+                            <Button text="Submit" onClick={submitClicked}/>
+                        </div>
                     }
-                    <FormGroup
-                        label="Email"
-                        labelFor="email"
-                        labelInfo="(required)"
-                        helperText="Demo account: admin@edir.com"
-                    >
-                        <InputGroup id="email" placeholder=""  onChange={emailOnChange}  />
-                    </FormGroup>
-                    <FormGroup
-                        label="Password"
-                        labelFor="password"
-                        labelInfo="(required)"
-                        helperText="Demo password: admin"
-                    >
-                        <InputGroup id="password" placeholder="" type="password" onChange={passwordOnChange} />
-                    </FormGroup>
-                    <Button text="Submit" onClick={submitClicked} />
                 </Card>
             </div>
         </div>

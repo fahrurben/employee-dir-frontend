@@ -7,10 +7,11 @@ import {
     CREATE_EMPLOYEE,
     GET_EMPLOYEE,
     UPDATE_EMPLOYEE,
-    DELETE_EMPLOYEE,
+    DELETE_EMPLOYEE, CHECK_AVAILABILITY,
 } from './constant';
 
 import {
+    checkBackendAvailability,
     loginSubmit,
     getEmployees,
     getDepartments,
@@ -24,6 +25,7 @@ import {
 // single entry point to start all Sagas at once
 export default function* rootSaga() {
     yield all([
+        yield takeLatest(CHECK_AVAILABILITY, checkBackendAvailability),
         yield takeLatest(LOGIN_SUBMITTING, loginSubmit),
         yield takeLatest(FETCH_DEPARTMENTS, getDepartments),
         yield takeLatest(FETCH_EMPLOYEES, getEmployees),

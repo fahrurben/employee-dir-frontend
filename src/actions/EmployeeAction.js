@@ -1,4 +1,4 @@
-import {DELETE_EMPLOYEE, GET_EMPLOYEE, RESET_EMPLOYEE_FORM} from "../constant";
+import {CHECK_AVAILABILITY, DELETE_EMPLOYEE, GET_EMPLOYEE, RESET_EMPLOYEE_FORM} from "../constant";
 import {FETCH_EMPLOYEES} from "../constant";
 import {FETCH_DEPARTMENTS} from "../constant";
 import {CREATE_EMPLOYEE} from "../constant";
@@ -14,6 +14,7 @@ function makeActionCreator(type, ...argNames) {
     }
 }
 
+export const checkAvailability = makeActionCreator(CHECK_AVAILABILITY);
 export const fetchEmployees = makeActionCreator(FETCH_EMPLOYEES, 'page');
 export const getEmployee = makeActionCreator(GET_EMPLOYEE, 'payload');
 export const fetchDepartments = makeActionCreator(FETCH_DEPARTMENTS);
